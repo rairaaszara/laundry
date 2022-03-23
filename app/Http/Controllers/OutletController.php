@@ -4,82 +4,81 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use \Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Paket;
+use App\Models\Outlet;
 
 
-class PaketController extends Controller
+class OutletController extends Controller
 {
     public $user;
     public function __construct(){
         $this->user = JWTAuth::parseToken()->authenticate();
     }
 
-    public function store(Request $request)
+    public function store(Request $request)     
     {
         $validator = Validator::make($request->all(), [
-            'jenis' => 'required',
-            'harga' => 'required'
+            'nama' => 'required',
+            'alamat' => 'required'
         ]);
 
         if($validator->fails()){
             return response()->json($validator->errors());
 		}
 
-        $paket = new Paket();
-        $paket->jenis = $request -> jenis;
-        $paket->harga = $request -> harga;
-        $paket -> save();
+        $outlet = new Outlet();
+        $outlet->nama = $request->nama;
+        $outlet->alamat = $request->alamat;
+        $outlet->save();
 
-        $data = Paket::where('id_paket', '=', $paket->id_paket)->first();
+        $data = Outlet::where('id', '=', $outlet->id)->first();
         return response()->json([
-            'message' => 'Data paket berhasil ditambahkan',
+            'message' => 'Data outlet berhasil ditambahkan',
             'data' => $data
         ]);
     }
 
-    public function getAll()
-    {
-        $data['count'] = Paket::count();
-
-        $data['paket'] = Paket::get();
-
-        return response()->json(['data' => $data]);
+    public function getAll($limit = NULL, $offset = NULL)
+    {        
+        $data = Outlet::get();
+        return response()->json($data);
     }
-
+    
     public function getById($id)
     {
-        $data['paket'] = Paket::where('id_paket', '=', $id)->get();
+        $data = Outlet::where('id', '=', $id)->first();
         
-        return response()->json(['data' => $data]);
-        
+        return response()->json([
+            'success' => true,
+            'data' => $data
+        ]);
     }
 
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'jenis' => 'required',
-            'harga' => 'required'
+            'nama' => 'required',
+            'alamat' => 'required'
         ]);
 
         if($validator->fails()) {
             return response()->json($validator->errors());
         }
 
-        $paket = Paket::where('id_paket', '=', $id)->first();
-        $paket->jenis = $request -> jenis;
-        $paket->harga = $request -> harga;
+        $outlet = Outlet::where('id', '=', $id)->first();
+        $outlet->nama = $request->nama;
+        $outlet->alamat = $request->alamat;
 
-        $paket->save();
+        $outlet->save();
 
         return response()->json([
             'success' => true,
-            'message' => 'Data paket berhasil diubah'
+            'message' => "Data outlet berhasil diubah"
         ]);
     }
 
     public function delete($id)
     {
-        $delete = Paket::where('id_paket', '=', $id)->delete();
+        $delete = Outlet::where('id', '=', $id)->delete();
 
         if($delete) {
             return response()->json([
