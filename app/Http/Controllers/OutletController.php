@@ -17,7 +17,7 @@ class OutletController extends Controller
     public function store(Request $request)     
     {
         $validator = Validator::make($request->all(), [
-            'nama' => 'required',
+            'nama_outlet' => 'required',
             'alamat' => 'required'
         ]);
 
@@ -26,12 +26,14 @@ class OutletController extends Controller
 		}
 
         $outlet = new Outlet();
-        $outlet->nama = $request->nama;
+        $outlet->nama_outlet = $request->nama;
         $outlet->alamat = $request->alamat;
         $outlet->save();
 
-        $data = Outlet::where('id', '=', $outlet->id)->first();
+        $data = Outlet::where('id_outlet', '=', $outlet->id_outlet)->first();
+        
         return response()->json([
+            'success' => true,
             'message' => 'Data outlet berhasil ditambahkan',
             'data' => $data
         ]);
@@ -45,7 +47,7 @@ class OutletController extends Controller
     
     public function getById($id)
     {
-        $data = Outlet::where('id', '=', $id)->first();
+        $data = Outlet::where('id_outlet', '=', $id)->first();
         
         return response()->json([
             'success' => true,
@@ -56,7 +58,7 @@ class OutletController extends Controller
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'nama' => 'required',
+            'nama_outlet' => 'required',
             'alamat' => 'required'
         ]);
 
@@ -64,8 +66,8 @@ class OutletController extends Controller
             return response()->json($validator->errors());
         }
 
-        $outlet = Outlet::where('id', '=', $id)->first();
-        $outlet->nama = $request->nama;
+        $outlet = Outlet::where('id_outlet', '=', $id)->first();
+        $outlet->nama_outlet = $request->nama_outlet;
         $outlet->alamat = $request->alamat;
 
         $outlet->save();
@@ -78,7 +80,7 @@ class OutletController extends Controller
 
     public function delete($id)
     {
-        $delete = Outlet::where('id', '=', $id)->delete();
+        $delete = Outlet::where('id_outlet', '=', $id)->delete();
 
         if($delete) {
             return response()->json([

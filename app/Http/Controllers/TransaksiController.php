@@ -42,7 +42,11 @@ class TransaksiController extends Controller
 
         $data = Transaksi::where('id_transaksi', '=', $transaksi->id_transaksi)->first();
 
-        return response()->json(['message' => 'Data transaksi berhasil ditambahkan', 'data' => $data]);
+        return response()->json([
+            'success' => true,
+            'message' => 'Data transaksi berhasil ditambahkan', 
+            'data' => $data
+        ]);
     }
 
     public function getAll()
@@ -64,13 +68,16 @@ class TransaksiController extends Controller
             return response()->json($validator->errors());
         }
 
-        $transaksi = Transaksi::find($id);
+        $transaksi = Transaksi::where('id_transaksi', $id)->first();
         
-        $transaksi->update=($request->all());
+        $transaksi->id_member = $request->id_member;
 
-        //$transaksi->save();
+        $transaksi->save();
 
-        return response()->json(['message' => 'Transaksi berhasil diubah']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaksi berhasil diubah'
+        ]);
     }
 
     public function getById($id)
@@ -131,7 +138,7 @@ class TransaksiController extends Controller
         $bulan = $request->bulan;
         
         $data = DB::table('transaksi')->join('member', 'transaksi.id_member', '=', 'member.id_member')
-                    ->select('transaksi.id','transaksi.tanggal','transaksi.tanggal_bayar','transaksi.subtotal', 'member.nama')
+                    ->select('transaksi.id','transaksi.tanggal','transaksi.tanggal_bayar','transaksi.total_bayar', 'member.nama')
                     ->whereYear('tanggal', '=' , $tahun)
                     ->whereMonth('tanggal', '=', $bulan)
                     ->get();

@@ -43,6 +43,7 @@ class UserController extends Controller
     $data = User::where('id', '=', $user->id)->first();
 
     return Response()->json([
+      'success' => true,
       'message' => 'Data user berhasil ditambahkan',
       'data' => $data
     ]);
@@ -50,11 +51,10 @@ class UserController extends Controller
 
   public function getAll()
   {
-      $data['count'] = User::count();
 
-      $data['users'] = User::get();
+      $data= User::get();
 
-      return response()->json(['data' => $data]);
+      return response()->json($data);
   }
 
   public function getById($id)
@@ -90,7 +90,7 @@ class UserController extends Controller
 
   public function delete($id)
   {
-      $delete = User::where('id_users', '=', $id)->delete();
+      $delete = User::where('id', '=', $id)->delete();
 
       if ($delete) {
           return response()->json(['message' => 'Data user berhasil dihapus']);

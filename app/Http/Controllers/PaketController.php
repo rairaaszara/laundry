@@ -32,6 +32,7 @@ class PaketController extends Controller
 
         $data = Paket::where('id_paket', '=', $paket->id_paket)->first();
         return response()->json([
+            'success' => true,
             'message' => 'Data paket berhasil ditambahkan',
             'data' => $data
         ]);
@@ -48,7 +49,7 @@ class PaketController extends Controller
 
     public function getById($id)
     {
-        $data['paket'] = Paket::where('id_paket', '=', $id)->get();
+        $data['paket'] = Paket::where('id_paket', '=', $id)->first();
         
         return response()->json(['data' => $data]);
         

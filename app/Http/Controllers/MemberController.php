@@ -57,7 +57,7 @@ class MemberController extends Controller
     
     public function getById($id)
     {
-        $data['member'] = Member::where('id_member', '=', $id)->get();
+        $data['member'] = Member::where('id_member', '=', $id)->first();
 
         return response()->json(['data' => $data]);
     }
@@ -91,7 +91,7 @@ class MemberController extends Controller
 
     public function delete($id)
     {
-        $delete = Member::where('id', '=', $id)->delete();
+        $delete = Member::where('id_member', '=', $id)->delete();
 
         if($delete) {
             return response()->json([

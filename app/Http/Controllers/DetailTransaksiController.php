@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Validator;
 class DetailTransaksiController extends Controller
 {
     public $user;
-    // public $response;
     public function __construct()
     {
         $this->response = new ResponseHelper();
@@ -48,9 +47,11 @@ class DetailTransaksiController extends Controller
 
         $data = DetailTransaksi::where('id_paket', '=', $detail->id_paket)->first();
 
-        return response()->json(['message' => 'Berhasil tambah detil transaksi', 'data' => $data]);
-
-        // return $this->response->successResponseData('Berhasil tambah detil transaksi', $data);
+        return response()->json([
+            'success' => true,
+            'message' => 'Berhasil tambah detil transaksi', 
+            'data' => $data
+        ]);
     }
 
     public function getById($id)

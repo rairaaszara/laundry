@@ -10,5 +10,7 @@ use App\Models\Member;
 class Outlet extends Model
 {
     protected $table = 'outlet';
-    protected $fillable = ['nama', 'alamat'];
+    protected $primaryKey = 'id_outlet';
+    public $timestamps = false;
+    protected $fillable = ['nama_outlet', 'alamat'];
 }

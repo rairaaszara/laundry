@@ -153,7 +153,10 @@ class AuthController extends Controller
             return response()->json(['message' => 'Token absent']);
         }
 
-        return response()->json(['message' => 'Authentication Success!']);
+        return response()->json([
+			'success' => true,
+			'message' => 'Success'
+		]);
     }
 
    
