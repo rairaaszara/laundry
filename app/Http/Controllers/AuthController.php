@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
+use Illuminate\Support\Facades\DB;
+
+
 class AuthController extends Controller
 {
     public function login(Request $request)
@@ -27,11 +30,14 @@ class AuthController extends Controller
 
         $user = JWTAuth::user();
 
+		$outlet = DB::table('outlet')->where('id_outlet', $user->id_outlet)->first();
+
         return response()->json([
             'success' => true,
             'message' => 'Login berhasil',
             'token' => $token,
-            'user' => $user
+            'user' => $user,
+			'outlet' => $outlet,
         ]);
 
         $data = [

@@ -9,6 +9,7 @@ use App\Http\Controllers\PaketController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\DetailTransaksiController;
+use App\Http\Controllers\OutletController;
 use App\Http\Controllers\DashboardController;
 
 
@@ -17,7 +18,7 @@ use App\Http\Controllers\DashboardController;
 
 
 Route::group(['middleware'=> ['jwt.verify:admin,kasir,owner']], function() {
-    Route::post('login/check', [AuthController::class, 'logincheck']);
+    Route::get('login/check', [AuthController::class, 'logincheck']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::post('report', [TransaksiController::class, 'report']);
     Route::get('/dashboard', [DashboardController::class, 'index']);
@@ -25,6 +26,13 @@ Route::group(['middleware'=> ['jwt.verify:admin,kasir,owner']], function() {
 
 //khusus admin
 Route::group(['middleware' => ['jwt.verify:admin']], function() {
+
+    //OUTLET
+    Route::get('outlet', [OutletController::class, 'getAll']);
+    Route::get('outlet/{id}', [OutletController::class, 'getById']);
+    Route::post('outlet', [OutletController::class, 'store']);
+    Route::put('outlet/{id}', [OutletController::class, 'update']);
+    Route::delete('outlet/{id}', [OutletController::class, 'delete']);
 
     //PAKET
     Route::post('paket', [PaketController::class, 'store']);

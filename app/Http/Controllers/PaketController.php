@@ -26,8 +26,8 @@ class PaketController extends Controller
 		}
 
         $paket = new Paket();
-        $paket->jenis = $request -> jenis;
-        $paket->harga = $request -> harga;
+        $paket -> jenis = $request -> jenis;
+        $paket -> harga = $request -> harga;
         $paket -> save();
 
         $data = Paket::where('id_paket', '=', $paket->id_paket)->first();
@@ -67,8 +67,8 @@ class PaketController extends Controller
         }
 
         $paket = Paket::where('id_paket', '=', $id)->first();
-        $paket->jenis = $request -> jenis;
-        $paket->harga = $request -> harga;
+        $paket -> jenis = $request -> jenis;
+        $paket -> harga = $request -> harga;
 
         $paket->save();
 

@@ -18,7 +18,7 @@ class OutletController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nama_outlet' => 'required',
-            'alamat' => 'required'
+            'alamat'      => 'required'
         ]);
 
         if($validator->fails()){
@@ -26,23 +26,23 @@ class OutletController extends Controller
 		}
 
         $outlet = new Outlet();
-        $outlet->nama_outlet = $request->nama;
-        $outlet->alamat = $request->alamat;
-        $outlet->save();
+        $outlet -> nama_outlet = $request -> nama_outlet;
+        $outlet -> alamat      = $request -> alamat;
+        $outlet -> save();
 
         $data = Outlet::where('id_outlet', '=', $outlet->id_outlet)->first();
-        
         return response()->json([
             'success' => true,
             'message' => 'Data outlet berhasil ditambahkan',
-            'data' => $data
+            'data'    => $data
         ]);
     }
 
-    public function getAll($limit = NULL, $offset = NULL)
+    public function getAll()
     {        
-        $data = Outlet::get();
-        return response()->json($data);
+      
+        $data= Outlet::get(); 
+        return response()->json(['data' => $data]);
     }
     
     public function getById($id)
@@ -67,8 +67,8 @@ class OutletController extends Controller
         }
 
         $outlet = Outlet::where('id_outlet', '=', $id)->first();
-        $outlet->nama_outlet = $request->nama_outlet;
-        $outlet->alamat = $request->alamat;
+        $outlet->nama_outlet = $request -> nama_outlet;
+        $outlet->alamat      = $request -> alamat;
 
         $outlet->save();
 

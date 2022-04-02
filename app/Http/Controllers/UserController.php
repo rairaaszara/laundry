@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use \Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Exceptions\JWTException;
-//use JWTAuth;
+
 
 class UserController extends Controller
 {
@@ -23,10 +24,11 @@ class UserController extends Controller
     public function store(Request $request)
   {
     $validator = Validator::make($request->all(),[
-      'name'  => 'required|string',
+      'name'     => 'required|string',
       'username' => 'required|string',
       'password' => 'required|string',
-      'role' => 'required|string',
+      'role'     => 'required|string',
+      'id_outlet'=> 'required'
     ]);
 
     if ($validator->fails()) {
@@ -34,10 +36,11 @@ class UserController extends Controller
     }
 
     $user = new User();
-    $user->name 	= $request->name;
-	$user->username = $request->username;
-	$user->password = Hash::make($request->password);
-	$user->role 	= $request->role;
+    $user -> name 	  = $request -> name;
+	  $user -> username = $request -> username;
+	  $user -> password = Hash::make($request->password);
+	  $user -> role 	  = $request -> role;
+    $user->id_outlet  = $request->id_outlet;
 
     $user->save();
     $data = User::where('id', '=', $user->id)->first();
@@ -52,14 +55,20 @@ class UserController extends Controller
   public function getAll()
   {
 
-      $data= User::get();
+    $data = DB::table('users')->join('outlet', 'users.id_outlet', '=', 'outlet.id_outlet')
+    ->select('users.*', 'outlet.nama_outlet')
+    ->get();
 
-      return response()->json($data);
+return response()->json($data);
   }
 
   public function getById($id)
   {
-      $data['users'] = User::where('id_users', '=', $id)->get();
+      $data = User::where('id', '=', $id)->first();
+      $data = DB::table('users')->join('outlet', 'users.id_outlet', '=', 'outlet.id_outlet')
+      ->select('users.*', 'outlet.nama_outlet')
+      ->where('users.id', '=', $id)
+      ->first();
 
       return response()->json(['data' => $data]);
   }
@@ -67,25 +76,27 @@ class UserController extends Controller
   public function update(Request $request, $id)
   {
     $validator = Validator::make($request->all(),[
-		'name' => 'required|string',
-		'username' => 'required|string',
-		'password' => 'required|string',
-		'role' => 'required|string',
+		'name'      => 'required',
+		'username'  => 'required',
+		'password'  => 'required',
+		'role'      => 'required',
+    'id_outlet' => 'required'
     ]);
 
-    if ($validator->fails()) {
-      return response()->json($validator->errors());
-    }
+    $user = User::where('id', '=', $id)->first();
 
-    $user = User::where('id_users', '=', $id)->first();
-	$user->name 	= $request->name;
-	$user->username = $request->username;
-	$user->password = Hash::make($request->password);
-	$user->role 	= $request->role;
-
+	  $user -> name      = $request -> name;
+		$user -> username  = $request -> username;
+		$user -> role      = $request -> role;
+		$user -> id_outlet = $request -> id_outlet;
+		if($request->password != null) {
+		$user -> password  = Hash::make($request->password);
+		}
     $user->save();
 
-    return Response()->json(['message' => 'Data user berhasil diubah',]);
+    return Response()->json([
+      'success' => true,
+      'message' => 'Data user berhasil diubah',]);
   }
 
   public function delete($id)

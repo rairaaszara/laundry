@@ -52,7 +52,8 @@ class TransaksiController extends Controller
     public function getAll()
     {
         $data = DB::table('transaksi')->join('member', 'transaksi.id_member', '=', 'member.id_member')
-                    ->select('transaksi.*', 'member.nama')
+        ->join('users', 'transaksi.id', '=', 'users.id')
+                    ->select('transaksi.*', 'member.nama','users.name')
                     ->get();
                     
         return response()->json($data);
@@ -83,8 +84,9 @@ class TransaksiController extends Controller
     public function getById($id)
     {
         $data = Transaksi::where('id_transaksi', '=', $id)->first();  
-        $data = DB::table('transaksi')->join('member', 'transaksi.id_member', '=', 'member.id_member')      
-                                      ->select('transaksi.*', 'member.nama')
+        $data = DB::table('transaksi')->join('member', 'transaksi.id_member', '=', 'member.id_member') 
+                                    ->join('users', 'transaksi.id', '=', 'users.id')     
+                                      ->select('transaksi.*', 'member.nama','users.name')
                                       ->where('transaksi.id_transaksi', '=', $id)
                                       ->first();
         return response()->json($data);
@@ -138,7 +140,8 @@ class TransaksiController extends Controller
         $bulan = $request->bulan;
         
         $data = DB::table('transaksi')->join('member', 'transaksi.id_member', '=', 'member.id_member')
-                    ->select('transaksi.id','transaksi.tanggal','transaksi.tanggal_bayar','transaksi.total_bayar', 'member.nama')
+                    ->join('users', 'transaksi.id', '=', 'users.id')
+                    ->select('transaksi.id','transaksi.tanggal','transaksi.tanggal_bayar','transaksi.total_bayar', 'member.nama','users.name')
                     ->whereYear('tanggal', '=' , $tahun)
                     ->whereMonth('tanggal', '=', $bulan)
                     ->get();
